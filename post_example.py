@@ -8,9 +8,6 @@ def home():
     return render_template('login.html')
 
 
-
-
-
 @app.route('/login', methods=['POST'])
 def login():
     uname = request.form.get('uname')
