@@ -1,4 +1,4 @@
-from flask import Flask, request , render_template
+from flask import Flask, request , render_template, jsonify
 import sqlite3
 
 
@@ -8,7 +8,7 @@ submissions = {}
 def init_db():
     with sqlite3.connect('database.db') as conn:
         conn.execute('CREATE TABLE IF NOT EXISTS students (email TEXT, name TEXT, mobile TEXT)')
-
+        
 
 @app.route('/')
 def home():
@@ -24,7 +24,7 @@ def login():
 
     # Simple validation rules
     if ".com" not in email or not name or not mobile.isdigit() or len(mobile) != 10:
-        return "Failed to Submit!"
+        return "Error: Failed to Submit!"
     
     # Check if this email has already been submitted with the same name and mobile
     if email in submissions and submissions[email]['name'] == name and submissions[email]['mobile'] == mobile:
@@ -49,6 +49,7 @@ def list():
    
     cur = con.cursor()
     cur.execute("SELECT * FROM students")
+    # cur.execute("DELETE FROM students")
    
     rows = cur.fetchall()
     return render_template("list.html", rows=rows)
